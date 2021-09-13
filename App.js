@@ -4,9 +4,14 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import * as Yup from 'yup';
 
 const MyInput = ({ fieldName, ...props }) => {
-  const [field] = useField(fieldName);
+  const [field,meta] = useField(fieldName);
   return (
-    <TextInput style={styles.input} onChangeText={field.handleChange('email')} value={field.value} {...props} />
+    <>
+    <TextInput onBlur={field.onBlur(fieldName)} style={styles.input} onChangeText={field.handleChange('email')} value={field.value} {...props} />
+    {meta.error && meta.touched &&(
+      <Text style={{color:'red'}} >{meta.error}</Text>
+    )}
+    </>
   )
 }
 
@@ -32,7 +37,7 @@ export default function App() {
             .email('Correo invalido')
             .required('Requerido'),
           name: Yup.string()
-            .min(50)
+            .min(10)
             .required('Requerido'),
         })}
         initialValues={{ email: '' }}
